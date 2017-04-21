@@ -1,6 +1,7 @@
 {
   "name": "react-native-collapsible-header",
-  "version": "0.0.2",
+  "description": "A collapsible header/navbar component for React Native.",
+  "version": "0.0.3",
   "main": "collapsible.js",
   "repository": {
     "type": "git",
