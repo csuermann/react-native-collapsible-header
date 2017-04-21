@@ -53,6 +53,3 @@ const styles = {
 
 export default Example;
 ```
-
-## Known issues
-[Crashes in dev mode](https://github.com/facebook/react-native/issues/11317), a [fix](https://github.com/facebook/react-native/pull/12910) is already on its way. Works in production without throwing errors (may cause performance issues).
