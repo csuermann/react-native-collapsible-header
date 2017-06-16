@@ -8,7 +8,7 @@
 
 # Definition
 ```javascript
-type collapsible
+type collapsible = {
   headerBackgroundColor?: string,
   headerHeight?: number,          // default = 44
   noStatusBar?: boolean,          // default = false
