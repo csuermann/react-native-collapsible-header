@@ -1,123 +1,72 @@
 import React, { Component } from 'react';
-import { Animated, FlatList, Platform, View } from 'react-native';
+import { Animated, Platform, ScrollView, View } from 'react-native';
 
-const headerHeight = Platform.select({ ios: 64, android: 56 });
+const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
+
 const statusBarHeight = Platform.select({ ios: 20, android: 0 });
 
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
-
 export default class Collapsible extends Component {
-  scrollAnim = new Animated.Value(0);
-  offsetAnim = new Animated.Value(0);
+  scroll = new Animated.Value(0);
+  offset = new Animated.Value(0);
 
-  state = {
-    scrollAnim: this.scrollAnim,
-    offsetAnim: this.offsetAnim,
-    clampedScroll: Animated.diffClamp(
-      Animated.add(
-        this.scrollAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 1],
-          extrapolateLeft: 'clamp'
-        }),
-        this.offsetAnim
-      ),
-      0,
-      headerHeight - statusBarHeight
-    )
-  };
+  headerHeight = (this.props.headerHeight || 44) + statusBarHeight;
 
   componentDidMount() {
-    this.state.scrollAnim.addListener(({ value }) => {
-      const diff = value - this.scrollValue;
-      this.scrollValue = value;
-      this.clampedScrollValue = Math.min(
-        Math.max(this.clampedScrollValue + diff, 0),
-        headerHeight - statusBarHeight
-      );
-    });
-
-    this.state.offsetAnim.addListener(({ value }) => {
-      this.offsetValue = value;
-    });
+    this.scroll.addListener(this.handleScroll);
   }
 
   componentWillUnmount() {
-    this.state.scrollAnim.removeAllListeners();
-    this.state.offsetAnim.removeAllListeners();
+    this.scroll.removeListener(this.handleScroll);
   }
 
-  onScrollEndDrag = () => {
-    this.scrollEndTimer = setTimeout(this.onMomentumScrollEnd, 250);
+  handleScroll = ({ value }) => {
+    this.previousScrollvalue = this.currentScrollValue;
+    this.currentScrollValue = value;
   };
 
-  onMomentumScrollBegin = () => {
-    clearTimeout(this.scrollEndTimer);
-  };
+  position = Animated.add(this.scroll, this.offset).interpolate({
+    inputRange: [0, this.headerHeight],
+    outputRange: [
+      0,
+      -this.headerHeight + (this.props.noStatusBar ? 0 : statusBarHeight)
+    ],
+    extrapolate: 'clamp'
+  });
 
-  onMomentumScrollEnd = () => {
-    const toValue = this.scrollValue > headerHeight &&
-      this.clampedScrollValue > (headerHeight - statusBarHeight) / 2
-      ? this.offsetValue + headerHeight
-      : this.offsetValue - headerHeight;
-
-    Animated.timing(this.state.offsetAnim, {
-      toValue,
-      duration: 350,
-      useNativeDriver: true
-    }).start();
-  };
-
-  clampedScrollValue = 0;
-  offsetValue = 0;
-  scrollValue = 0;
+  opacity = this.scroll.interpolate({
+    inputRange: [
+      0,
+      this.props.noStatusBar
+        ? this.headerHeight + statusBarHeight
+        : this.headerHeight
+    ],
+    outputRange: [1, 0]
+  });
 
   render() {
-    const { clampedScroll } = this.state;
-
-    const navbarTranslate = clampedScroll.interpolate({
-      inputRange: [0, headerHeight - statusBarHeight],
-      outputRange: [0, -(headerHeight - statusBarHeight)],
-      extrapolate: 'clamp'
-    });
-
-    const navbarOpacity = clampedScroll.interpolate({
-      inputRange: [0, headerHeight - statusBarHeight],
-      outputRange: [1, 0],
-      extrapolate: 'clamp'
-    });
-
     return (
       <View style={{ flex: 1 }}>
-        <AnimatedFlatList
-          contentContainerStyle={{ paddingTop: headerHeight }}
-          data={this.props.data}
-          keyExtractor={(item, i) => `collapsible-item-${i}`}
-          onMomentumScrollBegin={this.onMomentumScrollBegin}
-          onMomentumScrollEnd={this.onMomentumScrollEnd}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { y: this.state.scrollAnim } } }],
-            { useNativeDriver: true }
-          )}
-          onScrollEndDrag={this.onScrollEndDrag}
-          renderItem={this.props.renderItem}
-          scrollEventThrottle={1}
-          {...this.props}
-        />
+        <AnimatedScrollView
+          contentContainerStyle={{ paddingTop: this.headerHeight }}
+          onScroll={Animated.event([
+            { nativeEvent: { contentOffset: { y: this.scroll } } }
+          ])}
+          scrollEventThrottle={16}
+          {...this.props}>
+          {this.props.renderContent}
+        </AnimatedScrollView>
         <Animated.View
-          style={[
-            {
-              backgroundColor: this.props.headerColor || '#fff',
-              height: headerHeight,
-              left: 0,
-              paddingTop: statusBarHeight,
-              position: 'absolute',
-              right: 0,
-              top: 0,
-              transform: [{ translateY: navbarTranslate }]
-            }
-          ]}>
-          <Animated.View style={{ flex: 1, opacity: navbarOpacity }}>
+          style={{
+            backgroundColor: this.props.headerBackgroundColor,
+            height: this.headerHeight,
+            left: 0,
+            paddingTop: this.props.noStatusBar ? null : statusBarHeight,
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            transform: [{ translateY: this.position }]
+          }}>
+          <Animated.View style={{ flex: 1, opacity: this.opacity }}>
             {this.props.renderHeader}
           </Animated.View>
         </Animated.View>

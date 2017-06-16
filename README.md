@@ -6,50 +6,78 @@
 # Installation
 `yarn add react-native-collapsible-header`
 
-# Usage
+# Definition
 ```javascript
-<Collapsible
-  data={[{ key: 'value' }]}              // based on FlatList (minimal usage)
-  headerColor="#fff"                     // default = '#fff'
-  renderHeader={<Component />}
-  renderItem={({ item, index }) => null} // based on FlatList (minimal usage)
-  {...}                                  // FlatList and ScrollView props can be passed
- />
+type collapsible
+  headerBackgroundColor?: string,
+  headerHeight?: number,          // default = 44
+  noStatusBar?: boolean,          // default = false
+  renderHeader: any,              // <Component />
+  renderContent: any              // <Component />
+                                  // ScrollView props can be passed
+ };
 ```
 
 ## Example
 ```javascript
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react';
+import { Platform, StatusBar, Text, View } from 'react-native';
 
-import Collapsible from 'react-native-collapsible-header';
+import Collapsible from './collapsible';
 
-const Example = () => (
-  <Collapsible
-    data={[...Array(24).keys()].slice(1)}
-    headerColor="#0f9d58"
-    renderHeader={
-      <View style={[styles.landing, { flex: 1 }]}>
-        <Text style={{ color: '#fff' }}>Header</Text>
-      </View>
-    }
-    renderItem={({ index }) => (
-      <View
-        style={[
-          styles.landing,
-          { backgroundColor: index % 2 !== 0 ? '#f7f7f7' : null }
-        ]}>
-        <Text style={{ color: '#444', padding: 40 }}>Content</Text>
-      </View>
-    )}
-    ItemSeparatorComponent={() => <View style={styles.line} />}
-  />
+const Header = () => (
+  <View
+    style={{
+      alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center'
+    }}>
+    <Text style={{ color: '#fff' }}>
+      Header
+    </Text>
+  </View>
 );
 
-const styles = {
-  landing: { alignItems: 'center', justifyContent: 'center' },
-  line: { backgroundColor: '#ccc', height: StyleSheet.hairlineWidth }
-};
+const Content = ({ gray }) => (
+  <View
+    style={{
+      alignItems: 'center',
+      backgroundColor: gray ? '#f7f7f7' : null,
+      justifyContent: 'center'
+    }}>
+    <Text style={{ color: '#444', padding: 40 }}>Content</Text>
+  </View>
+);
 
-export default Example;
+export default class Example extends Component {
+  componentWillMount() {
+    StatusBar.setBarStyle('light-content', true);
+
+    if (Platform.OS === 'android')
+      StatusBar.setBackgroundColor('#0f9d58', true);
+  }
+
+  render() {
+    return (
+      <Collapsible
+        headerBackgroundColor="#0f9d58"
+        renderHeader={<Header />}
+        renderContent={
+          <View>
+            <Content />
+            <Content gray />
+            <Content />
+            <Content gray />
+            <Content />
+            <Content gray />
+            <Content />
+            <Content gray />
+            <Content />
+            <Content gray />
+          </View>
+        }
+      />
+    );
+  }
+}
 ```
