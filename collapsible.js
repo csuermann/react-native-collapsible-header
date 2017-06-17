@@ -7,8 +7,8 @@ export default class Collapsible extends Component {
   scroll = new Animated.Value(0);
   offset = new Animated.Value(0);
 
-  min = Platform.select({ ios: 20, android: 0 });
-  max = (this.props.height || 44) + this.min;
+  min = this.props.min === false ? 0 : Platform.select({ ios: 20, android: 0 });
+  max = (this.props.max || 44) + this.min;
 
   position = Animated.add(this.scroll, this.offset).interpolate({
     inputRange: [0, this.max],
@@ -27,7 +27,7 @@ export default class Collapsible extends Component {
   });
 
   render() {
-    const { backgroundColor, height, ...props } = this.props;
+    const { backgroundColor, ...props } = this.props;
 
     return (
       <View style={{ flex: 1, overflow: 'hidden' }}>

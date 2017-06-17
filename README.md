@@ -15,7 +15,8 @@ Can also be utilized to create a parallax scrolling effect.
 type collapsible = {
   backgroundColor?: string,
   bounce?: boolean,         // default = true
-  height?: number,          // default = 44
+  max?: number,             // default = 44
+  min?: boolean,            // default = true
   renderContent: any        // <Component />
   renderHeader: any,        // <Component />
                             // ScrollView props can be passed
