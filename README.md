@@ -5,7 +5,7 @@ Can also be utilized to create a parallax scrolling effect.
 
 <img src="https://raw.githubusercontent.com/sonaye/react-native-collapsible-header/master/demo2.gif" width="400">
 
-[Inspiration](https://medium.com/appandflow/react-native-collapsible-navbar-e51a049b560a).
+[Inspiration](https://medium.com/appandflow/react-native-collapsible-navbar-e51a049b560a). (also this [Snack]( https://snack.expo.io/B1v5RS7ix))
 
 # Installation
 `yarn add react-native-collapsible-header`
