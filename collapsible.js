@@ -24,13 +24,15 @@ export default class Collapsible extends Component {
     inputRange: [
       0,
       this.props.noStatusBar
-        ? (this.headerHeight + statusBarHeight) / 2
-        : this.headerHeight / 2,
-      this.props.noStatusBar
         ? this.headerHeight + statusBarHeight
         : this.headerHeight
     ],
-    outputRange: [1, 1, 0]
+    outputRange: [1, 0]
+  });
+
+  height = this.scroll.interpolate({
+    inputRange: [-this.headerHeight, 0, this.headerHeight],
+    outputRange: [this.headerHeight * 2, this.headerHeight, this.headerHeight]
   });
 
   render() {
@@ -48,7 +50,7 @@ export default class Collapsible extends Component {
         <Animated.View
           style={{
             backgroundColor: this.props.headerBackgroundColor,
-            height: this.headerHeight,
+            height: this.props.noBounce ? this.headerHeight : this.height,
             left: 0,
             paddingTop: this.props.noStatusBar ? null : statusBarHeight,
             position: 'absolute',

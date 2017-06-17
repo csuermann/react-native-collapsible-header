@@ -11,6 +11,7 @@
 type collapsible = {
   headerBackgroundColor?: string,
   headerHeight?: number,          // default = 44
+  noBounce?: boolean,             // default = false
   noStatusBar?: boolean,          // default = false
   renderHeader: any,              // <Component />
   renderContent: any              // <Component />
