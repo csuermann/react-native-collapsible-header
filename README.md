@@ -23,7 +23,7 @@ type collapsible = {
 import React, { Component } from 'react';
 import { Platform, StatusBar, Text, View } from 'react-native';
 
-import Collapsible from './collapsible';
+import Collapsible from 'react-native-collapsible-navbar';
 
 const Header = () => (
   <View

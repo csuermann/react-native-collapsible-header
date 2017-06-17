@@ -11,19 +11,6 @@ export default class Collapsible extends Component {
 
   headerHeight = (this.props.headerHeight || 44) + statusBarHeight;
 
-  componentDidMount() {
-    this.scroll.addListener(this.handleScroll);
-  }
-
-  componentWillUnmount() {
-    this.scroll.removeListener(this.handleScroll);
-  }
-
-  handleScroll = ({ value }) => {
-    this.previousScrollvalue = this.currentScrollValue;
-    this.currentScrollValue = value;
-  };
-
   position = Animated.add(this.scroll, this.offset).interpolate({
     inputRange: [0, this.headerHeight],
     outputRange: [
@@ -37,22 +24,25 @@ export default class Collapsible extends Component {
     inputRange: [
       0,
       this.props.noStatusBar
+        ? (this.headerHeight + statusBarHeight) / 2
+        : this.headerHeight / 2,
+      this.props.noStatusBar
         ? this.headerHeight + statusBarHeight
         : this.headerHeight
     ],
-    outputRange: [1, 0]
+    outputRange: [1, 1, 0]
   });
 
   render() {
     return (
       <View style={{ flex: 1 }}>
         <AnimatedScrollView
+          {...this.props}
           contentContainerStyle={{ paddingTop: this.headerHeight }}
           onScroll={Animated.event([
             { nativeEvent: { contentOffset: { y: this.scroll } } }
           ])}
-          scrollEventThrottle={16}
-          {...this.props}>
+          scrollEventThrottle={16}>
           {this.props.renderContent}
         </AnimatedScrollView>
         <Animated.View
