@@ -13,13 +13,12 @@ Can also be utilized to create a parallax scrolling effect.
 # Definition
 ```javascript
 type collapsible = {
-  headerBackgroundColor?: string,
-  headerHeight?: number,          // default = 44
-  noBounce?: boolean,             // default = false
-  noStatusBar?: boolean,          // default = false
-  renderHeader: any,              // <Component />
-  renderContent: any              // <Component />
-                                  // ScrollView props can be passed
+  backgroundColor?: string,
+  bounce?: boolean,         // default = true
+  height?: number,          // default = 44
+  renderContent: any        // <Component />
+  renderHeader: any,        // <Component />
+                            // ScrollView props can be passed
  };
 ```
 
@@ -28,7 +27,7 @@ type collapsible = {
 import React, { Component } from 'react';
 import { Platform, StatusBar, Text, View } from 'react-native';
 
-import Collapsible from 'react-native-collapsible-navbar';
+import Collapsible from 'react-native-collapsible-header';
 
 const Header = () => (
   <View
@@ -65,7 +64,7 @@ export default class Example extends Component {
   render() {
     return (
       <Collapsible
-        headerBackgroundColor="#0f9d58"
+        backgroundColor="#0f9d58"
         renderHeader={<Header />}
         renderContent={
           <View>

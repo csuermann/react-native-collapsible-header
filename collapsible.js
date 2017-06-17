@@ -3,44 +3,37 @@ import { Animated, Platform, ScrollView, View } from 'react-native';
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
-const statusBarHeight = Platform.select({ ios: 20, android: 0 });
-
 export default class Collapsible extends Component {
   scroll = new Animated.Value(0);
   offset = new Animated.Value(0);
 
-  headerHeight = (this.props.headerHeight || 44) + statusBarHeight;
+  min = Platform.select({ ios: 20, android: 0 });
+  max = (this.props.height || 44) + this.min;
 
   position = Animated.add(this.scroll, this.offset).interpolate({
-    inputRange: [0, this.headerHeight],
-    outputRange: [
-      0,
-      -this.headerHeight + (this.props.noStatusBar ? 0 : statusBarHeight)
-    ],
+    inputRange: [0, this.max],
+    outputRange: [0, this.min - this.max],
     extrapolate: 'clamp'
   });
 
   opacity = this.scroll.interpolate({
-    inputRange: [
-      0,
-      this.props.noStatusBar
-        ? this.headerHeight + statusBarHeight
-        : this.headerHeight
-    ],
+    inputRange: [0, this.max],
     outputRange: [1, 0]
   });
 
   height = this.scroll.interpolate({
-    inputRange: [-this.headerHeight, 0, this.headerHeight],
-    outputRange: [this.headerHeight * 2, this.headerHeight, this.headerHeight]
+    inputRange: [-this.max, 0, this.max],
+    outputRange: [this.max * 2, this.max, this.max]
   });
 
   render() {
+    const { backgroundColor, height, ...props } = this.props;
+
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, overflow: 'hidden' }}>
         <AnimatedScrollView
-          {...this.props}
-          contentContainerStyle={{ paddingTop: this.headerHeight }}
+          {...props}
+          contentContainerStyle={{ paddingTop: this.max }}
           onScroll={Animated.event([
             { nativeEvent: { contentOffset: { y: this.scroll } } }
           ])}
@@ -49,10 +42,10 @@ export default class Collapsible extends Component {
         </AnimatedScrollView>
         <Animated.View
           style={{
-            backgroundColor: this.props.headerBackgroundColor,
-            height: this.props.noBounce ? this.headerHeight : this.height,
+            backgroundColor,
+            height: this.props.bounce === false ? this.max : this.height,
             left: 0,
-            paddingTop: this.props.noStatusBar ? null : statusBarHeight,
+            paddingTop: this.min,
             position: 'absolute',
             right: 0,
             top: 0,
