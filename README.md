@@ -1,5 +1,9 @@
 # react-native-collapsible-header
-<img src="https://raw.githubusercontent.com/sonaye/react-native-collapsible-header/master/demo.gif" width="400">
+<img src="https://raw.githubusercontent.com/sonaye/react-native-collapsible-header/master/demo1.gif" width="400">
+
+Can also be utilized use to create a parallax scrolling effect.
+
+<img src="https://raw.githubusercontent.com/sonaye/react-native-collapsible-header/master/demo2.gif" width="400">
 
 [Inspiration](https://medium.com/appandflow/react-native-collapsible-navbar-e51a049b560a).
 
