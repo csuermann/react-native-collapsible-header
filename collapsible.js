@@ -27,14 +27,23 @@ export default class Collapsible extends Component {
   });
 
   render() {
-    const { backgroundColor, bounces, ...props } = this.props;
+    const { backgroundColor, ...props } = this.props;
 
     return (
       <View style={{ flex: 1, overflow: 'hidden' }}>
+        <AnimatedScrollView
+          {...props}
+          contentContainerStyle={{ paddingTop: this.max }}
+          onScroll={Animated.event([
+            { nativeEvent: { contentOffset: { y: this.scroll } } }
+          ])}
+          scrollEventThrottle={16}>
+          {this.props.renderContent}
+        </AnimatedScrollView>
         <Animated.View
           style={{
             backgroundColor,
-            height: this.props.bounces === false ? this.max : this.height,
+            height: this.props.bounce === false ? this.max : this.height,
             left: 0,
             paddingTop: this.min,
             position: 'absolute',
@@ -46,15 +55,6 @@ export default class Collapsible extends Component {
             {this.props.renderHeader}
           </Animated.View>
         </Animated.View>
-        <AnimatedScrollView
-          {...props}
-          contentContainerStyle={{ paddingTop: this.max }}
-          onScroll={Animated.event([
-            { nativeEvent: { contentOffset: { y: this.scroll } } }
-          ])}
-          scrollEventThrottle={16}>
-          {this.props.renderContent}
-        </AnimatedScrollView>
       </View>
     );
   }

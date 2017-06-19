@@ -14,7 +14,7 @@ Can also be utilized to create a parallax scrolling effect.
 ```javascript
 type collapsible = {
   backgroundColor?: string,
-  bounces?: boolean,        // default = true
+  bounce?: boolean,         // default = true
   max?: number,             // default = 44
   min?: boolean,            // default = true
   renderContent: any        // <Component />
