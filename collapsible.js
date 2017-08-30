@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Animated, Platform, KeyboardAwareScrollView, View } from 'react-native'
+import { Animated, Platform, View } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const AnimatedScrollView = Animated.createAnimatedComponent(
   KeyboardAwareScrollView
