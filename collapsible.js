@@ -1,33 +1,35 @@
-import React, { Component } from 'react';
-import { Animated, Platform, ScrollView, View } from 'react-native';
+import React, { Component } from 'react'
+import { Animated, Platform, KeyboardAwareScrollView, View } from 'react-native'
 
-const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
+const AnimatedScrollView = Animated.createAnimatedComponent(
+  KeyboardAwareScrollView
+)
 
 export default class Collapsible extends Component {
-  scroll = new Animated.Value(0);
-  offset = new Animated.Value(0);
+  scroll = new Animated.Value(0)
+  offset = new Animated.Value(0)
 
-  min = this.props.min === false ? 0 : Platform.select({ ios: 20, android: 0 });
-  max = (this.props.max || 44) + this.min;
+  min = this.props.min === false ? 0 : Platform.select({ ios: 20, android: 0 })
+  max = (this.props.max || 44) + this.min
 
   position = Animated.add(this.scroll, this.offset).interpolate({
     inputRange: [0, this.max],
     outputRange: [0, this.min - this.max],
     extrapolate: 'clamp'
-  });
+  })
 
   opacity = this.scroll.interpolate({
     inputRange: [0, this.max],
     outputRange: [1, 0]
-  });
+  })
 
   height = this.scroll.interpolate({
     inputRange: [-this.max, 0, this.max],
     outputRange: [this.max * 2, this.max, this.max]
-  });
+  })
 
-  render() {
-    const { backgroundColor, ...props } = this.props;
+  render () {
+    const { backgroundColor, ...props } = this.props
 
     return (
       <View style={{ flex: 1, overflow: 'hidden' }}>
@@ -37,7 +39,8 @@ export default class Collapsible extends Component {
           onScroll={Animated.event([
             { nativeEvent: { contentOffset: { y: this.scroll } } }
           ])}
-          scrollEventThrottle={16}>
+          scrollEventThrottle={16}
+        >
           {this.props.renderContent}
         </AnimatedScrollView>
         <Animated.View
@@ -50,12 +53,13 @@ export default class Collapsible extends Component {
             right: 0,
             top: 0,
             transform: [{ translateY: this.position }]
-          }}>
+          }}
+        >
           <Animated.View style={{ flex: 1, opacity: this.opacity }}>
             {this.props.renderHeader}
           </Animated.View>
         </Animated.View>
       </View>
-    );
+    )
   }
 }
