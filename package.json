@@ -1,11 +1,12 @@
 {
   "name": "react-native-collapsible-header",
   "description": "A collapsible header/navbar component for React Native.",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "main": "collapsible.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sonaye/react-native-collapsible-header.git"
+    "url":
+      "git+https://github.com/csuermann/react-native-collapsible-header.git"
   },
   "dependencies": {
     "react-native-keyboard-aware-scroll-view": "^0.3.0"
